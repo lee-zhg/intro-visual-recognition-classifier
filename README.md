@@ -1,4 +1,4 @@
-# Classify Pictures with Visual Recognition and Watson Studio
+# Classify Pictures with Watson Studio & Visual Recognition
 
 The IBM Watson™ Visual Recognition service uses deep learning algorithms to analyze images for scenes, objects, and other content. A set of built-in models provides highly accurate results without training to analyze images for objects, colors, food, explicit content and other subjects for insights into your visual content.
 
