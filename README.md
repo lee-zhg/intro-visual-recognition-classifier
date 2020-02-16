@@ -227,6 +227,8 @@ To test your custom model,
 
     ![Custom Model 09](docs/images/custommodel09.png)
 
+1. Take note of `Model ID` which will be needed for the remaining of the workshop.
+
 1. Select the `Test` tab.
 
 1. Select or drag and drop testing image file `data/BrooklynLager-test.JPG` to the canvas.
@@ -550,130 +552,18 @@ To call your custom model API in `Node.js` application,
     }
 
 
+## Build Mobile Application with your Custom Model
+
+Refer to the resource/repo links below to build mobile application with a custom model.
+
+* https://cloud-annotations.github.io/training/classification/cli/
+
+* https://cloud-annotations.github.io/training/object-detection/cli/
+
+* https://github.com/cloud-annotations/custom-training
 
 
-### Test Model
 
-* Once the traning is complete click on **here** in the snakbar.
-
-![](assets/image13.png)
-
-* A new dashboard will open having three tabs
-
-1. **Overview**
-2. **Test**
-3. **Implementation**
-
-* Click on the **Test** tab.
-
-![](assets/image14.png)
-
-* Take a test image from any source and click on **browse** or simply **drag and drop** the image on to the dashboard.
-* After loading the image into image classifier, it run the image classification algorithm which returns the accuracy within the range from 0 to 1 that identifies your class or object.
-
-![](assets/image15.png)
-
-### Building the client side application (Android App).
-
-* Start **Android Studio** and create a **new project**.
-
-![](assets/image16.png)
-
-* Go back to your model in watson studio and click on **Implementation** tab.
-* Under the **Implementation** tab look for Java on the left hand side navigation drawer and select it. You will find the code required to communicate with the model.
-
-![](assets/image17.png)
-
-* In Android Studio under **Gradle Scripts/build.gradle (Module:app)**. Add ```implementation 'com.ibm.watson.developer_cloud:java-sdk:5.5.0'``` in the **dependencies block** and click on **Sync Now**.
-
-* After the sync process is complete, go to **MainActivity** under the **java/package_name.project_name/** and add two global object
-1. VisualRecognition
-2. CameraHelper
-
-```
-VisualRecognition mVisualRecognition;
-CameraHelper mCameraHelper;
-```
-* Under the **onCreate** method in Main Activity, initialize the objects.
-
-```
-mVisualRecognition = new VisualRecognition("{version}");
-mVisualRecognition.setApiKey(api_key);
-
-mCameraHelper = new CameraHelper(this);
-```
-* Once the above parts are done, under **onActivityResult** method create a background thread for making the network call, parsing the result and displaying the result to the UI.
-
-```
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CameraHelper.REQUEST_IMAGE_CAPTURE) {
-            final Bitmap photo = mCameraHelper.getBitmap(resultCode);
-            final File photoFile = mCameraHelper.getFile(resultCode);
-            ImageView preview = findViewById(R.id.img_view_main);
-            preview.setImageBitmap(photo);
-
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    InputStream imagesStream = null;
-                    try {
-                        imagesStream = new FileInputStream(photoFile);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    ClassifyOptions classifyOptions = new ClassifyOptions.Builder()
-                            .imagesFile(imagesStream)
-                            .imagesFilename(photoFile.getName())
-                            .threshold((float) 0.6)
-                            .owners(Arrays.asList("me"))
-                            .build();
-                    ClassifiedImages result = mVisualRecognition.classify(classifyOptions).execute();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(result);
-                    String name = null;
-                    try {
-                        JSONObject jsonObject = new JSONObject(json);
-                        JSONArray jsonArray = jsonObject.getJSONArray("images");
-                        JSONObject jsonObject1 = jsonArray.getJSONObject(0);
-                        JSONArray jsonArray1 = jsonObject1.getJSONArray("classifiers");
-                        JSONObject jsonObject2 = jsonArray1.getJSONObject(0);
-                        JSONArray jsonArray2 = jsonObject2.getJSONArray("classes");
-                        JSONObject jsonObject3 = jsonArray2.getJSONObject(0);
-                        name = jsonObject3.getString("class");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    final String finalName = name;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TextView detectedObjects = findViewById(R.id.text_view_main);
-                            detectedObjects.setText(finalName);
-                            detectedObjects.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    startActivity(new Intent(MainActivity.this, RecommendationActivity.class));
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-
-        }
-    }
-```
-
-Congratulations! Now you have an android application communicating with the model built and deployed on Watson Studio.
-
-Link to the [Github Repo](https://github.com/sudoalgorithm/Developing-A-Image-Classifier-Using-Watson-Visual-Recognition-On-Watson-Studio-Android-App) contining the android code.
-
-## Summary
-
-In this how-to we learned how to build a image classification model using Watson Tool project on Watson Studio and then use the model to build and android application.
 
 
 
