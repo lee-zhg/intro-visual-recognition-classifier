@@ -129,7 +129,7 @@ The rest of this `README` provide the workshop instructions.
 
 1. Click `browse` on the canvas with lab **Drop image files here to let the classifier analyze them or browse to select files**.
 
-1. Select file `docs/images/test-food-fruit.png`.
+1. Select file `data/test-food-fruit.png`.
 
 1. The `General` model classifies the picture.
 
@@ -138,7 +138,7 @@ The rest of this `README` provide the workshop instructions.
 
 ### Add Data Assets
 
-To add tarining photos to the `Waston Studio` project as `data assets`, 
+To add training photos to the `Waston Studio` project as `data assets`, 
 
 1. Navigate back to the  `Watson Studio` project by clicking your project link at the top-left.
 
@@ -163,7 +163,7 @@ To add tarining photos to the `Waston Studio` project as `data assets`,
     * data/WoodchuckHardCider.zip
     * data/negative.zip
 
-1. You have to load file one at a time. You have three data assets ready to build your custom model after you completed the loading.
+1. You may have to load file one at a time in some browser. After loading, you have three data assets ready to build your custom model after you completed the loading.
 
     ![Data Asset 04](docs/images/datassets05.png)
 
@@ -318,14 +318,14 @@ To call your custom model API via `Curl`,
 1. Classify an image via POST API
 
     ```
-    curl -X POST -u "apikey:{apikey}" -F "images_file=@<PATH of your downloaded repo folder>/intro-visual-recognition-classifier/data/WoodchuckHardCider-test.jpg" -F "threshold=0.6" -F "classifier_ids=MyBottleModel_290228105" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19"
+    curl -X POST -u "apikey:{apikey}" -F "images_file=@data/WoodchuckHardCider-test.jpg" -F "threshold=0.6" -F "classifier_ids=MyBottleModel_290228105" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19"
     ```
 
     >Note: Replace `{apikey}` with the `apikey` of your `Visual Recognition` instance.
 
     > Note: `MyBottleModel_290228105` is the custom model ID. Replace it with your custom model ID which can be found on the `Overview` tab of your custom model.
 
-    >Note: `<PATH of your downloaded repo folder>/intro-visual-recognition-classifier/data/WoodchuckHardCider-test.jpg` is the testing image on your local machine.
+    >Note: `data/WoodchuckHardCider-test.jpg` is the testing image on your local machine.
 
 1. The REST API call returns the classification result below. With 90.8% confidence, it's classified as `WoodchuckHardCider`.
 
@@ -496,53 +496,6 @@ To call your custom model API in `Node.js` application,
                 }
               ]
             },
-            {
-              "classifier_id": "default",
-              "name": "default",
-              "classes": [
-                {
-                  "class": "steak sauce",
-                  "score": 0.613,
-                  "type_hierarchy": "/food/food product/food ingredient/food seasoning/condiment/steak sauce"
-                },
-                {
-                  "class": "condiment",
-                  "score": 0.672
-                },
-                {
-                  "class": "food seasoning",
-                  "score": 0.672
-                },
-                {
-                  "class": "food ingredient",
-                  "score": 0.672
-                },
-                {
-                  "class": "food product",
-                  "score": 0.673
-                },
-                {
-                  "class": "food",
-                  "score": 0.876
-                },
-                {
-                  "class": "beverage",
-                  "score": 0.795
-                },
-                {
-                  "class": "alcoholic beverage",
-                  "score": 0.684
-                },
-                {
-                  "class": "bottle green color",
-                  "score": 0.926
-                },
-                {
-                  "class": "reddish brown color",
-                  "score": 0.649
-                }
-              ]
-            }
           ],
           "image": "BrooklynLager-test.jpg"
         }

@@ -22,7 +22,7 @@ var visualRecognition = new VisualRecognitionV3({
 	iam_apikey: '{iam_api_key}'
 });
 
-var images_file= fs.createReadStream('./fruitbowl.jpg');
+var images_file= fs.createReadStream('data/WoodchuckHardCider-test.jpg');
 var classifier_ids = ["MyBottleModel_290228105"];
 var threshold = 0.6;
 
