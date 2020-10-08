@@ -276,17 +276,29 @@ To call your custom model API via `Curl`,
     ```
     cd <PATH>/intro-visual-recognition-classifier
 
-1. Classify an image via GET API
+1. Store `apikey` of your `Visual Recognition` instance to an environment variable.
 
     ```
-    curl -u "apikey:{apikey}" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?url=https://raw.githubusercontent.com/lee-zhg/intro-visual-recognition-classifier/master/data/BrooklynLager-test.jpg&version=2018-03-19&classifier_ids=MyBottleModel_290228105"
+    export apikey=NyWLH39X0iySMfDVxDqIEY17CIgM3A2DURBLvdicszEXI4Mt
     ```
 
-    > Note: Replace `{apikey}` with the `apikey` of your `Visual Recognition` instance.
+1. Store `Model ID` of your deployed `Visual Recognition` model to an environment variable.
 
-    > Note: `MyBottleModel_290228105` is the custom model ID. Replace it with your custom model ID which can be found on the `Overview` tab of your custom model.
+    ```
+    export model_id=MyBottleModel_290228105
+    ```
 
-    > Note: `ttps://raw.githubusercontent.com/lee-zhg/intro-visual-recognition-classifier/master/data/BrooklynLager-test.jpg` is the testing image in the Github.
+1. Store the url of your sample image to an environment variable.
+
+    ```
+    export sample_image_url=https://raw.githubusercontent.com/lee-zhg/intro-visual-recognition-classifier/master/data/BrooklynLager-test.jpg
+    ```
+
+1. Classify an sample image via GET API
+
+    ```
+    curl -u "apikey:$apikey" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?url=$sample_image_url&version=2018-03-19&classifier_ids=$model_id"
+    ```
 
 1. The REST API call returns the classification result below. With 90.7% confidence, it's classified as `BrooklynLager`.
 
@@ -318,12 +330,8 @@ To call your custom model API via `Curl`,
 1. Classify an image via POST API
 
     ```
-    curl -X POST -u "apikey:{apikey}" -F "images_file=@data/WoodchuckHardCider-test.jpg" -F "threshold=0.6" -F "classifier_ids=MyBottleModel_290228105" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19"
+    curl -X POST -u "apikey:$apikey" -F "images_file=@data/WoodchuckHardCider-test.jpg" -F "threshold=0.6" -F "classifier_ids=$model_id" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19"
     ```
-
-    >Note: Replace `{apikey}` with the `apikey` of your `Visual Recognition` instance.
-
-    > Note: `MyBottleModel_290228105` is the custom model ID. Replace it with your custom model ID which can be found on the `Overview` tab of your custom model.
 
     >Note: `data/WoodchuckHardCider-test.jpg` is the testing image on your local machine.
 
@@ -356,14 +364,10 @@ To call your custom model API via `Curl`,
 1. You may combine your new custom model with the `default` Classification model that comes with your `Visual Recognition` service when classifying an image. So, you can take advantage of your custom model as well as the pre-built model. For example,
 
     ```
-    curl -X POST -u "apikey:{apikey}" -F "images_file=@<PATH of your downloaded repo folder>/intro-visual-recognition-classifier/data/WoodchuckHardCider-test.jpg" -F "threshold=0.6" -F "classifier_ids=MyBottleModel_290228105,default" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19"
+    curl -X POST -u "apikey:$apikey" -F "images_file=@<PATH of your downloaded repo folder>/intro-visual-recognition-classifier/data/WoodchuckHardCider-test.jpg" -F "threshold=0.6" -F "classifier_ids=$model_id,default" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19"
     ```
 
-    > Note: `classifier_ids=MyBottleModel_290228105,default` in the call specifies that you want to combine your custom model `classifier_ids=MyBottleModel_290228105` and pre-built model `default`.
-
-    >Note, Replace `{apikey}` with the `apikey` of your `Visual Recognition` instance.
-
-    > Note: `MyBottleModel_290228105` is the custom model ID. Replace it with your custom model ID which can be found on the `Overview` tab of your custom model.
+    > Note: `classifier_ids=$model_id,default` in the call specifies that you want to combine your custom model `classifier_ids=$model_id` and pre-built model `default`.
 
     >Note: `<PATH of your downloaded repo folder>/intro-visual-recognition-classifier/data/WoodchuckHardCider-test.jpg` is the testing image on your local machine.
 
@@ -483,26 +487,49 @@ To call your custom model API in `Node.js` application,
 
     ```
     {
-      "images": [
-        {
-          "classifiers": [
+        "images": [
             {
-              "classifier_id": "MyBottleModel_290228105",
-              "name": "My Bottle Model",
-              "classes": [
+            "classifiers": [
                 {
-                  "class": "BrooklynLager",
-                  "score": 0.907
+                "classifier_id": "default",
+                "name": "default",
+                "classes": [
+                    {
+                    "class": "beverage",
+                    "score": 0.698
+                    },
+                    {
+                    "class": "food",
+                    "score": 0.793
+                    },
+                    {
+                    "class": "olive color",
+                    "score": 0.776
+                    },
+                    {
+                    "class": "claret red color",
+                    "score": 0.654
+                    }
+                ]
+                },
+                {
+                "classifier_id": "MyBottleModel_1763680699",
+                "name": "My Bottle Model",
+                "classes": [
+                    {
+                    "class": "WoodchuckHardCider",
+                    "score": 0.908
+                    }
+                ]
                 }
-              ]
-            },
-          ],
-          "image": "BrooklynLager-test.jpg"
-        }
-      ],
-      "images_processed": 1,
-      "custom_classes": 2
+            ],
+            "image": "WoodchuckHardCider-test.jpg"
+            }
+        ],
+        "images_processed": 1,
+        "custom_classes": 2
     }
+    ```
 
 
 ## Build Mobile Application with your Custom Model
